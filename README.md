@@ -38,19 +38,51 @@ portafolio_luis_rosas/
 └── README.md     # Este archivo
 ```
 
-## 🚀 Despliegue en GitHub Pages
+## � Contacto
 
-1. Subir a GitHub
-2. Ir a Settings > Pages
-3. Seleccionar branch `main` y carpeta `/ (root)`
-4. ¡Listo!
-
-## 📞 Contacto
-
-- 📧 Email: luis.rosas@example.com
+- 📧 Email: luisrosasgom@gmail.com
 - 💼 GitHub: [@ZERLB](https://github.com/ZERLB)
 - 📍 Ciudad de México, México
 
 ---
 
-Hecho con ❤️ por Luis Antonio Rosas Gómez © 2026
+# 🚀 Portfolio | Luis Antonio Rosas Gómez
+
+## 👨‍💻 About Me
+
+I'm **Luis Antonio Rosas Gómez**, a Full Stack Developer passionate about creating exceptional digital experiences. I transform ideas into innovative technological solutions.
+
+## 🌐 Live Demo
+
+🔗 **[luisantonio.dev](https://zerlb.github.io/portafolio_luis_antonio_rosas_gomez/)**
+
+## ✨ Features
+
+- 🎨 Modern and minimalist design
+- 📱 Fully responsive
+- ⚡ Smooth animations with CSS and JavaScript
+- 🌙 Elegant dark theme
+- 🖱️ Custom cursor
+- 📧 Contact form
+
+## 🛠️ Technologies Used
+
+- Semantic HTML5
+- CSS3 with variables and animations
+- Vanilla JavaScript (ES6+)
+- Font Awesome icons
+- Google Fonts (Inter, JetBrains Mono)
+
+## 📂 Structure
+
+```
+portafolio_luis_rosas/
+├── index.html    # Main page (all-in-one)
+└── README.md     # This file
+```
+
+## 📞 Contact
+
+- 📧 Email: luisrosasgom@gmail.com
+- 💼 GitHub: [@ZERLB](https://github.com/ZERLB)
+- 📍 Mexico City, Mexico
