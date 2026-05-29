@@ -13,7 +13,7 @@
 
 ---
 
-## 🇪🇸 Español
+## 🇲🇽 Español
 
 ### 👨‍💻 Sobre Mí
 Soy **Ingeniero en Sistemas Computacionales** y **Desarrollador Full Stack** apasionado por la creación de soluciones digitales robustas, escalables e innovadoras. Mi experiencia abarca desde el desarrollo de arquitecturas API RESTful hasta el despliegue y administración de infraestructura de servidores físicos y virtuales bajo entornos de red empresariales.
