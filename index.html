@@ -1274,6 +1274,10 @@
             color: var(--bg);
         }
 
+        body.light-mode #github-dock-icon {
+            color: #1f2937 !important;
+        }
+
         body.light-mode .timeline::before {
             background: linear-gradient(to bottom, rgba(79, 70, 229, 0.2), rgba(219, 39, 119, 0.2));
         }
@@ -1904,7 +1908,7 @@
                 <span class="dock-tooltip">Experiencia</span>
             </a>
             <div class="dock-separator"></div>
-            <a href="https://github.com/ZERLB" target="_blank" class="dock-item" style="color: #f3f4f6;">
+            <a href="https://github.com/ZERLB" target="_blank" class="dock-item" id="github-dock-icon" style="color: #c9d1d9;">
                 <i class="fab fa-github"></i>
                 <span class="dock-tooltip">GitHub</span>
             </a>
