@@ -34,6 +34,22 @@
             --gradient-accent: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
         }
 
+        body.light-mode {
+            --bg: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.65);
+            --border: rgba(15, 23, 42, 0.08);
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.08);
+            --secondary: #db2777;
+            --secondary-glow: rgba(219, 39, 119, 0.08);
+            --accent: #0d9488;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-dark: #94a3b8;
+            --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #9333ea 50%, #db2777 100%);
+            --gradient-accent: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -50,6 +66,7 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
         }
 
         /* Interactive Particle Background */
@@ -100,6 +117,109 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        /* Custom trailing cursor */
+        .cursor-outer,
+        .cursor-inner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        .cursor-outer {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--primary);
+            opacity: 0.5;
+        }
+
+        .cursor-inner {
+            width: 6px;
+            height: 6px;
+            background-color: var(--primary);
+        }
+
+        /* Hover states for the cursor */
+        body.hovered-element .cursor-outer {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(99, 102, 241, 0.08);
+            border-color: var(--secondary);
+            opacity: 0.8;
+        }
+        body.light-mode.hovered-element .cursor-outer {
+            background-color: rgba(79, 70, 229, 0.08);
+        }
+
+        body.hovered-element .cursor-inner {
+            width: 0px;
+            height: 0px;
+            opacity: 0;
+        }
+
+        /* Hide custom cursor on touch devices */
+        @media (max-width: 1024px) {
+            .cursor-outer,
+            .cursor-inner {
+                display: none;
+            }
+        }
+
+        /* ========== GENERAL BUTTONS ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+        }
+
+        body.light-mode .btn-secondary {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.08);
+            color: var(--text-main);
+        }
+
+        body.light-mode .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(79, 70, 229, 0.3);
         }
 
         /* ========== FLUID FLOATING DOCK (macOS Sonoma Style) ========== */
@@ -1060,6 +1180,119 @@
                 font-size: 1.1rem;
             }
         }
+
+        /* ========== LIGHT MODE SPECIFIC OVERRIDES ========== */
+        body.light-mode {
+            background-color: var(--bg);
+            color: var(--text-main);
+        }
+
+        body.light-mode .glass {
+            background: var(--bg-card);
+            border-color: var(--border);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.04);
+        }
+
+        body.light-mode .dock {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(0, 0, 0, 0.06);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-mode .dock-item {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.04);
+            color: var(--text-muted);
+        }
+
+        body.light-mode .dock-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(79, 70, 229, 0.3);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.15);
+        }
+
+        body.light-mode .dock-separator {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .dock-tooltip {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(0, 0, 0, 0.08);
+            color: #0f172a;
+        }
+
+        body.light-mode .badge {
+            background: var(--primary-glow);
+            border-color: rgba(79, 70, 229, 0.18);
+        }
+
+        body.light-mode .console-container {
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-mode .console-header {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        body.light-mode .console-body {
+            color: #1e293b;
+        }
+
+        body.light-mode .console-prompt {
+            color: #4f46e5;
+        }
+
+        body.light-mode .console-output {
+            color: #475569;
+        }
+
+        body.light-mode .skill-tag, 
+        body.light-mode .filter-btn {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.08);
+            color: var(--text-muted);
+        }
+
+        body.light-mode .social-btn,
+        body.light-mode .contact-icon,
+        body.light-mode .form-group input,
+        body.light-mode .form-group textarea {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.08);
+            color: var(--text-main);
+        }
+
+        body.light-mode .form-group input:focus,
+        body.light-mode .form-group textarea:focus {
+            background-color: rgba(0, 0, 0, 0.04);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.1);
+        }
+
+        body.light-mode .social-btn:hover {
+            background-color: var(--text-main);
+            color: var(--bg);
+        }
+
+        body.light-mode .timeline::before {
+            background: linear-gradient(to bottom, rgba(79, 70, 229, 0.2), rgba(219, 39, 119, 0.2));
+        }
+
+        body.light-mode .about-avatar-card,
+        body.light-mode .skill-card,
+        body.light-mode .cert-card,
+        body.light-mode .project-card,
+        body.light-mode .timeline-card,
+        body.light-mode .contact-form {
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.04);
+        }
+
+        body.light-mode .skill-card:hover,
+        body.light-mode .cert-card:hover,
+        body.light-mode .project-card:hover {
+            box-shadow: 0 20px 45px rgba(79, 70, 229, 0.08);
+            border-color: rgba(79, 70, 229, 0.3);
+        }
     </style>
 </head>
 
@@ -1679,6 +1912,11 @@
                 <i class="fas fa-envelope"></i>
                 <span class="dock-tooltip">Email</span>
             </a>
+            <div class="dock-separator"></div>
+            <button id="theme-toggle" class="dock-item" onclick="toggleTheme()" aria-label="Cambiar tema" style="color: #eab308; background: none; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;">
+                <i class="fas fa-sun" id="theme-icon"></i>
+                <span class="dock-tooltip">Tema</span>
+            </button>
         </div>
     </div>
 
@@ -1711,13 +1949,14 @@
             });
 
             // Highlight dock items based on active section
+            const isLight = document.body.classList.contains('light-mode');
             dockItems.forEach(item => {
-                item.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
-                item.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                item.style.backgroundColor = isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)';
+                item.style.borderColor = isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.05)';
                 const href = item.getAttribute('href');
                 if (href && href.slice(1) === current) {
-                    item.style.backgroundColor = 'rgba(99, 102, 241, 0.15)';
-                    item.style.borderColor = 'rgba(99, 102, 241, 0.4)';
+                    item.style.backgroundColor = 'rgba(79, 70, 229, 0.15)';
+                    item.style.borderColor = 'rgba(79, 70, 229, 0.4)';
                 }
             });
         });
@@ -1763,9 +2002,12 @@
                 if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
             }
             draw() {
+                const isLight = document.body.classList.contains('light-mode');
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(99, 102, 241, 0.2)';
+                ctx.fillStyle = isLight
+                    ? 'rgba(79, 70, 229, 0.18)'
+                    : 'rgba(99, 102, 241, 0.2)';
                 ctx.fill();
             }
         }
@@ -1777,6 +2019,7 @@
         }
 
         function drawLines() {
+            const isLight = document.body.classList.contains('light-mode');
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
@@ -1787,7 +2030,10 @@
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(99, 102, 241, ${0.12 * (1 - dist / 120)})`;
+                        const alpha = (0.12 * (1 - dist / 120));
+                        ctx.strokeStyle = isLight
+                            ? `rgba(79, 70, 229, ${alpha * 0.7})`
+                            : `rgba(99, 102, 241, ${alpha})`;
                         ctx.lineWidth = 0.8;
                         ctx.stroke();
                     }
@@ -1805,6 +2051,40 @@
             requestAnimationFrame(animateParticles);
         }
         animateParticles();
+
+        // ========== TEMA DÍA / NOCHE ==========
+        function applyTheme(theme) {
+            const icon = document.getElementById('theme-icon');
+            const toggleBtn = document.getElementById('theme-toggle');
+            if (theme === 'light') {
+                document.body.classList.add('light-mode');
+                icon.className = 'fas fa-moon';
+                toggleBtn.style.color = '#6366f1';
+            } else {
+                document.body.classList.remove('light-mode');
+                icon.className = 'fas fa-sun';
+                toggleBtn.style.color = '#eab308';
+            }
+        }
+
+        function toggleTheme() {
+            const isLight = document.body.classList.contains('light-mode');
+            const newTheme = isLight ? 'dark' : 'light';
+            localStorage.setItem('portfolio-theme', newTheme);
+            applyTheme(newTheme);
+        }
+
+        // Cargar preferencia guardada o del sistema
+        (function initTheme() {
+            const saved = localStorage.getItem('portfolio-theme');
+            if (saved) {
+                applyTheme(saved);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                applyTheme('light');
+            } else {
+                applyTheme('dark');
+            }
+        })();
 
         // ========== CUSTOM FLUID CURSOR (Desktop Only) ==========
         const cursorOuter = document.querySelector('.cursor-outer');
