@@ -2172,9 +2172,9 @@
         const consoleBody = document.getElementById('consoleBody');
         const logs = [
             { type: 'cmd', text: 'systemctl status savitar-core' },
-            { type: 'output', text: '● savitar-core.service - Savitar Infrastructure Monitor Daemon\n   Loaded: loaded (/etc/systemd/system/savitar-core.service; enabled)\n   Active: active (running) since Fri May 29 13:00:00 CST; 2h ago\n   Main PID: 5009 (node)\n   Memory: 84.6M\n   Status: "Monitoring 25 active virtual nodes via Tailscale"' },
-            { type: 'cmd', text: 'tailscale status --peers=5' },
-            { type: 'output', text: '100.94.231.51   unisa-1              linux   active (XCP-ng Hypervisor)\n100.86.229.13   koha                 linux   active (Koha ILS Server)\n100.67.62.102   dbrespaldo           linux   active (DB replication master)\n100.91.71.25    sistemasdte          linux   active (Aplicativos DTE/SGABS)\n100.85.85.52    wordpress-unisa      linux   active (SIGU-U Hub)\n[+19 nodes online in Mesh Network]' },
+            { type: 'output', text: '● savitar-core.service - Savitar Infrastructure Monitor Daemon\n   Loaded: loaded (/etc/systemd/system/savitar-core.service; enabled)\n   Active: active (running) since Fri May 29 13:00:00 CST; 2h ago\n   Main PID: 5009 (node)\n   Memory: 84.6M\n   Status: "Monitoring 25 active virtual nodes"' },
+            { type: 'cmd', text: 'crontab -l | grep -v "#"' },
+            { type: 'output', text: '0 2 * * * /usr/local/bin/db-backup.sh --all\n*/15 * * * * /usr/local/bin/status-monitor.py\n30 3 * * * /usr/local/bin/storage-sync.sh' },
             { type: 'cmd', text: 'systemctl status koha-common' },
             { type: 'output', text: '● koha-common.service - LSB: Koha virtual hosting daemon\n   Loaded: loaded (/etc/init.d/koha-common; generated)\n   Active: active (running) since Thu May 28 09:12:04 CST; 1 day ago\n   Tasks: 12 (limit: 9438)\n   Memory: 112.4M' },
             { type: 'cmd', text: 'systemctl status postgresql@14-main' },
@@ -2182,9 +2182,9 @@
             { type: 'cmd', text: 'cisco-academy --verify-ccna --id 33892328' },
             { type: 'output', text: 'Connecting to Cisco Networking Academy API...\n[OK] Identity match: Luis Antonio Rosas Gómez\n[OK] Modules verified:\n     - CCNA 1: Introduction to Networks (Grade: A)\n     - CCNA 2: Routing and Switching Essentials (Grade: A)\n     - CCNA 3: Scaling Networks (Grade: A)\n     - CCNA 4: Connecting Networks (Grade: A)' },
             { type: 'cmd', text: 'xcp-pool-list --hypervisors' },
-            { type: 'output', text: '📍 Pool: Universidad_de_la_Salud_XCP_ng\n   - Host 1: 100.94.231.51 (XCP-ng 8.2) | 256GB RAM [Active]\n     -> VMs Running: 24 / 25\n     -> vCPUs Total: 72 cores' },
+            { type: 'output', text: '📍 Pool: Universidad_de_la_Salud_XCP_ng\n   - Host 1: 100.94.231.51 (XCP-ng 8.2) [Active]\n     -> VMs Running: 24 / 25\n     -> vCPUs Total: 72 cores' },
             { type: 'cmd', text: 'get-skills --developer-level --expert' },
-            { type: 'output', text: '🎯 Expert Core Stack:\n   - Frontend: React / Vite / TailwindCSS / TS\n   - Backend: Node.js / Express / RESTful / PHP\n   - Devops: Linux / XCP-ng / PM2 / Nginx / Apache / Tailscale\n   - Network: Core Switches / VLANs / Hillstone Firewall' }
+            { type: 'output', text: '🎯 Expert Core Stack:\n   - Frontend: React / Vite / TailwindCSS / TS\n   - Backend: Node.js / Express / RESTful / PHP\n   - Devops: Linux / XCP-ng / PM2 / Nginx / Apache / Scripting / CronJobs\n   - Network: Core Switches / VLANs / Network Security' }
         ];
 
         let logIndex = 0;
