@@ -9,7 +9,7 @@
     <meta name="author" content="Luis Antonio Rosas Gómez">
     <title>Luis Antonio Rosas Gómez | Ing. en Sistemas Computacionales</title>
 
-    <!-- Google Fonts: Plus Jakarta Sans for Headers, Inter for Body, JetBrains Mono for specs -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -19,16 +19,17 @@
 
     <style>
         :root {
-            --bg: #070913;
-            --bg-card: rgba(15, 18, 36, 0.4);
+            --bg: #04060c;
+            --bg-card: rgba(10, 12, 28, 0.45);
             --border: rgba(255, 255, 255, 0.08);
             --primary: #6366f1;
-            --primary-glow: rgba(99, 102, 241, 0.15);
+            --primary-glow: rgba(99, 102, 241, 0.12);
             --secondary: #ec4899;
+            --secondary-glow: rgba(236, 72, 153, 0.12);
             --accent: #14b8a6;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
-            --text-dark: #6b7280;
+            --text-dark: #4b5563;
             --gradient-primary: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
             --gradient-accent: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
         }
@@ -37,7 +38,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
         }
 
         html {
@@ -52,57 +52,46 @@
             overflow-x: hidden;
         }
 
-        /* Background glows */
+        /* Interactive Particle Background */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Ambient glowing meshes */
         .ambient-glow {
             position: absolute;
-            width: 600px;
-            height: 600px;
+            width: 650px;
+            height: 650px;
             border-radius: 50%;
-            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
-            filter: blur(80px);
+            filter: blur(120px);
             pointer-events: none;
             z-index: 0;
-            opacity: 0.8;
+            opacity: 0.65;
+            animation: floatGlow 15s ease-in-out infinite alternate;
         }
 
-        .glow-1 { top: -10%; left: -10%; }
-        .glow-2 { bottom: 10%; right: -10%; }
-        .glow-3 { top: 40%; left: 50%; transform: translateX(-50%); }
-
-        /* Custom Cursor */
-        .cursor-outer {
-            width: 28px;
-            height: 28px;
-            border: 2px solid var(--primary);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
-            z-index: 9999;
-            mix-blend-mode: screen;
+        .glow-1 {
+            top: -10%;
+            left: -10%;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
         }
 
-        .cursor-inner {
-            width: 6px;
-            height: 6px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 10000;
+        .glow-2 {
+            bottom: 10%;
+            right: -10%;
+            background: radial-gradient(circle, var(--secondary-glow) 0%, transparent 70%);
+            animation-delay: -5s;
         }
 
-        .hovered-element .cursor-outer {
-            width: 48px;
-            height: 48px;
-            border-color: var(--secondary);
-            background-color: rgba(236, 72, 153, 0.05);
-        }
-
-        .hovered-element .cursor-inner {
-            background-color: var(--secondary);
+        @keyframes floatGlow {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(40px) scale(1.1); }
         }
 
         /* Glassmorphism utility */
@@ -113,132 +102,123 @@
             border: 1px solid var(--border);
         }
 
-        /* ========== NAVIGATION ========== */
-        .navbar {
+        /* ========== FLUID FLOATING DOCK (macOS Sonoma Style) ========== */
+        .dock-container {
             position: fixed;
-            top: 20px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 1200px;
             z-index: 1000;
-            padding: 0.8rem 2rem;
+            pointer-events: none;
+        }
+
+        .dock {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
             border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            background: rgba(7, 9, 19, 0.3);
+            background: rgba(10, 12, 28, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            pointer-events: auto;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .navbar.scrolled {
-            background: rgba(15, 18, 36, 0.7);
-            border-color: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            padding: 0.6rem 2rem;
-        }
-
-        .navbar-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-            text-decoration: none;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo span {
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-            align-items: center;
-        }
-
-        .nav-links a {
+        .dock-item {
+            font-size: 1.25rem;
             color: var(--text-muted);
             text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
         }
 
-        .nav-links a:hover {
-            color: var(--text-main);
-        }
-
-        .nav-links a.active {
+        .dock-item:hover {
+            transform: scale(1.3) translateY(-10px);
             color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
         }
 
-        .nav-links a::after {
-            content: '';
+        .dock-separator {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.15);
+            margin: 0 4px;
+        }
+
+        .dock-tooltip {
             position: absolute;
-            bottom: -6px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: width 0.3s;
-            border-radius: 2px;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: rgba(7, 9, 19, 0.95);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: white;
+            font-weight: 600;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
 
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            width: 100%;
+        .dock-item:hover .dock-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
-        .menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-main);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        /* ========== HERO SECTION ========== */
+        /* ========== HERO SECTION & DEVELOPER CONSOLE ========== */
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 8rem 2rem 4rem;
+            padding: 6rem 2rem 4rem;
         }
 
-        .hero-container {
-            max-width: 1000px;
-            text-align: center;
+        .hero-layout {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 4rem;
+            align-items: center;
             position: relative;
             z-index: 1;
+        }
+
+        .hero-text {
+            text-align: left;
         }
 
         .badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.18);
             color: var(--primary);
-            padding: 6px 16px;
+            padding: 6px 14px;
             border-radius: 100px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -259,9 +239,9 @@
 
         .hero-title {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-size: clamp(2.5rem, 5.5vw, 4.2rem);
             font-weight: 800;
-            line-height: 1.15;
+            line-height: 1.1;
             letter-spacing: -2px;
             margin-bottom: 1.5rem;
         }
@@ -274,84 +254,87 @@
         }
 
         .hero-subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            font-size: 1.05rem;
             color: var(--text-muted);
-            max-width: 750px;
-            margin: 0 auto 3rem;
-            font-weight: 400;
+            margin-bottom: 2.5rem;
+            max-width: 550px;
         }
 
         .hero-buttons {
             display: flex;
             gap: 1rem;
-            justify-content: center;
             flex-wrap: wrap;
         }
 
-        .btn {
-            font-family: 'Inter', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 28px;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
+        /* Mock developer console */
+        .console-container {
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+            overflow: hidden;
+            width: 100%;
         }
 
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.4);
-        }
-
-        .btn-secondary {
+        .console-header {
             background: rgba(255, 255, 255, 0.03);
-            color: var(--text-main);
-            border: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+        .console-dots {
+            display: flex;
+            gap: 6px;
         }
 
-        .scroll-down {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+        .console-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+
+        .console-dot.red { background-color: #ef4444; }
+        .console-dot.yellow { background-color: #f59e0b; }
+        .console-dot.green { background-color: #10b981; }
+
+        .console-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
             color: var(--text-dark);
-            font-size: 1.2rem;
-            animation: bounce 2s infinite;
-            cursor: pointer;
-            transition: color 0.3s;
         }
 
-        .scroll-down:hover {
-            color: var(--text-main);
+        .console-body {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            padding: 20px;
+            color: #d1d5db;
+            min-height: 300px;
+            text-align: left;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
-            40% { transform: translate(-50%, -10px); }
-            60% { transform: translate(-50%, -5px); }
+        .console-line {
+            margin-bottom: 10px;
         }
 
-        /* ========== ABOUT SECTION ========== */
+        .console-prompt {
+            color: #6366f1;
+            font-weight: bold;
+        }
+
+        .console-output {
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .console-success { color: #10b981; }
+        .console-info { color: #38bdf8; }
+
+        /* ========== SECTION GENERALS ========== */
         .section {
             padding: 8rem 2rem;
             position: relative;
+            z-index: 1;
         }
 
         .container {
@@ -377,102 +360,83 @@
 
         .section-title {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-size: clamp(2rem, 3.5vw, 2.6rem);
             font-weight: 800;
-            letter-spacing: -1px;
+            letter-spacing: -1.2px;
             margin-bottom: 1rem;
         }
 
         .section-desc {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
+        /* ========== ABOUT SECTION ========== */
         .about-layout {
             display: grid;
-            grid-template-columns: 1.2fr 1.8fr;
+            grid-template-columns: 1.1fr 1.9fr;
             gap: 4rem;
             align-items: center;
         }
 
-        .about-graphics {
-            position: relative;
-            display: flex;
-            justify-content: center;
-        }
-
         .about-avatar-card {
             border-radius: 32px;
-            padding: 3rem;
+            padding: 3rem 2rem;
             text-align: center;
             width: 100%;
-            max-width: 320px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
             position: relative;
-            z-index: 2;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
         }
 
         .about-avatar-card i {
-            font-size: 6rem;
+            font-size: 5rem;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .about-avatar-card h4 {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 1.25rem;
-            font-weight: 700;
+            font-weight: 800;
         }
 
         .about-avatar-card p {
             color: var(--text-dark);
             font-size: 0.85rem;
-            margin-top: 0.5rem;
-        }
-
-        .about-graphics::before {
-            content: '';
-            position: absolute;
-            width: 110%;
-            height: 110%;
-            border: 2px dashed rgba(99, 102, 241, 0.2);
-            border-radius: 40px;
-            top: -5%;
-            left: -5%;
-            z-index: 1;
-            pointer-events: none;
+            margin-top: 0.3rem;
+            font-weight: 500;
         }
 
         .about-text h3 {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 1.75rem;
-            font-weight: 700;
+            font-size: 1.7rem;
+            font-weight: 800;
             margin-bottom: 1.5rem;
-            line-height: 1.3;
+            line-height: 1.35;
         }
 
         .about-text p {
             color: var(--text-muted);
             margin-bottom: 1.5rem;
-            font-size: 1.05rem;
+            font-size: 1.02rem;
         }
 
         .about-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
             padding-top: 2rem;
             border-top: 1px solid var(--border);
         }
 
         .stat-card h5 {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 2.25rem;
-            font-weight: 800;
+            font-size: 2.2rem;
+            font-weight: 900;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -481,8 +445,9 @@
 
         .stat-card p {
             color: var(--text-dark);
-            font-size: 0.85rem;
-            margin: 0.25rem 0 0;
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+            font-weight: 600;
         }
 
         /* ========== SKILLS SECTION ========== */
@@ -494,15 +459,14 @@
 
         .skill-card {
             border-radius: 24px;
-            padding: 2rem;
+            padding: 2.25rem;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
         }
 
         .skill-card:hover {
             transform: translateY(-8px);
-            border-color: rgba(99, 102, 241, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
         }
 
         .skill-icon {
@@ -515,20 +479,20 @@
             align-items: center;
             justify-content: center;
             color: var(--primary);
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             margin-bottom: 1.5rem;
         }
 
         .skill-card h3 {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+            font-weight: 800;
             margin-bottom: 0.5rem;
         }
 
         .skill-card p {
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             margin-bottom: 1.5rem;
         }
 
@@ -539,10 +503,10 @@
         }
 
         .skill-tag {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
             color: var(--text-muted);
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 50px;
             font-size: 0.75rem;
             font-weight: 500;
@@ -567,7 +531,7 @@
         .cert-card:hover {
             transform: translateY(-4px);
             border-color: rgba(99, 102, 241, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         }
 
         .cert-logo {
@@ -591,16 +555,45 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 0.95rem;
             font-weight: 700;
-            line-height: 1.3;
+            line-height: 1.35;
         }
 
         .cert-info p {
             color: var(--text-dark);
             font-size: 0.8rem;
             margin-top: 0.2rem;
+            font-weight: 500;
         }
 
-        /* ========== PROJECTS ========== */
+        /* ========== PROJECTS (Interactive tab filters) ========== */
+        .project-filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 3.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -612,19 +605,22 @@
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
-            flex-col: column;
+            flex-direction: column;
             height: 100%;
+        }
+
+        .project-card.hidden {
+            display: none;
         }
 
         .project-card:hover {
             transform: translateY(-8px);
-            border-color: rgba(99, 102, 241, 0.3);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            border-color: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
         }
 
         .project-cover {
-            height: 200px;
-            background: var(--gradient-primary);
+            height: 190px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -637,20 +633,28 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.15);
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .project-cover i {
+            position: relative;
+            z-index: 2;
         }
 
         .project-cover-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(99, 102, 241, 0.95);
+            background: rgba(10, 12, 28, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 1rem;
             opacity: 0;
             transition: opacity 0.3s;
-            z-index: 2;
+            z-index: 3;
         }
 
         .project-card:hover .project-cover-overlay {
@@ -658,23 +662,24 @@
         }
 
         .project-action-btn {
-            width: 48px;
-            height: 48px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
-            background-color: white;
-            color: var(--primary);
+            background-color: var(--primary);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
             font-size: 1.1rem;
-            transition: transform 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .project-action-btn:hover {
             transform: scale(1.1);
-            color: var(--secondary);
+            background-color: var(--secondary);
+            box-shadow: 0 5px 15px rgba(236, 72, 153, 0.3);
         }
 
         .project-content {
@@ -714,7 +719,7 @@
             line-height: 1.5;
         }
 
-        /* ========== TIMELINE ========== */
+        /* ========== TIMELINE (EXPERIENCE) ========== */
         .timeline {
             position: relative;
             max-width: 800px;
@@ -729,7 +734,7 @@
             width: 2px;
             height: 100%;
             background: linear-gradient(to bottom, var(--primary), var(--secondary));
-            opacity: 0.2;
+            opacity: 0.15;
         }
 
         .timeline-item {
@@ -770,7 +775,7 @@
             width: 90%;
             border-radius: 20px;
             padding: 1.75rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
         }
 
         .timeline-date {
@@ -792,6 +797,7 @@
             font-size: 0.85rem;
             color: var(--text-dark);
             margin-bottom: 1rem;
+            font-weight: 600;
         }
 
         .timeline-card ul {
@@ -814,7 +820,7 @@
             color: var(--primary);
         }
 
-        /* ========== CONTACT SECTION ========== */
+        /* ========== CONTACT ========== */
         .contact-layout {
             display: grid;
             grid-template-columns: 1fr 1.2fr;
@@ -824,7 +830,7 @@
         .contact-details h3 {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 1.75rem;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 1rem;
         }
 
@@ -852,7 +858,7 @@
             width: 48px;
             height: 48px;
             border-radius: 14px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
             display: flex;
             align-items: center;
@@ -872,7 +878,7 @@
             font-size: 0.75rem;
             color: var(--text-dark);
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 700;
             display: block;
         }
 
@@ -890,7 +896,7 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
             display: flex;
             align-items: center;
@@ -929,7 +935,7 @@
         .form-group input,
         .form-group textarea {
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.03);
+            background-color: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 12px 16px;
@@ -943,14 +949,14 @@
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
-            background-color: rgba(255, 255, 255, 0.06);
+            background-color: rgba(255, 255, 255, 0.05);
             box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
         }
 
         /* ========== FOOTER ========== */
         .footer {
             border-top: 1px solid var(--border);
-            padding: 3rem 2rem;
+            padding: 3rem 2rem 8rem; /* space for bottom dock */
             text-align: center;
         }
 
@@ -971,12 +977,13 @@
         .footer-text {
             color: var(--text-dark);
             font-size: 0.8rem;
+            font-weight: 500;
         }
 
-        /* Animations */
+        /* Entry Animations */
         .reveal {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(24px);
             transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -987,34 +994,18 @@
 
         /* ========== RESPONSIVE ========== */
         @media (max-width: 968px) {
-            .navbar {
-                top: 0;
-                width: 100%;
-                border-radius: 0;
-                border-left: 0;
-                border-right: 0;
-                border-top: 0;
+            .hero-layout {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                padding-top: 2rem;
             }
 
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background-color: rgba(7, 9, 19, 0.98);
-                padding: 2rem;
-                border-bottom: 1px solid var(--border);
-                gap: 1.5rem;
+            .hero-text {
+                text-align: center;
             }
 
-            .nav-links.active {
-                display: flex;
-            }
-
-            .menu-btn {
-                display: block;
+            .hero-buttons {
+                justify-content: center;
             }
 
             .about-layout,
@@ -1052,62 +1043,88 @@
             .timeline-card {
                 width: 100%;
             }
+
+            .dock-container {
+                width: 90%;
+            }
+
+            .dock {
+                justify-content: space-around;
+                width: 100%;
+                gap: 5px;
+            }
+
+            .dock-item {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <!-- Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
     <!-- Ambient glowing meshes -->
     <div class="ambient-glow glow-1"></div>
     <div class="ambient-glow glow-2"></div>
-    <div class="ambient-glow glow-3"></div>
 
-    <!-- Custom Cursor -->
+    <!-- Custom Cursor (Desktop Only) -->
     <div class="cursor-outer"></div>
     <div class="cursor-inner"></div>
 
-    <!-- Navigation Header -->
-    <nav class="navbar glass">
-        <div class="navbar-container">
-            <a href="#home" class="logo">LUIS ANTONIO<span>· ZERLB</span></a>
-            <ul class="nav-links">
-                <li><a href="#home" class="active">Inicio</a></li>
-                <li><a href="#about">Sobre Mí</a></li>
-                <li><a href="#skills">Habilidades</a></li>
-                <li><a href="#certifications">Certificaciones</a></li>
-                <li><a href="#projects">Portafolio</a></li>
-                <li><a href="#experience">Experiencia</a></li>
-                <li><a href="#contact">Contacto</a></li>
-            </ul>
-            <button class="menu-btn" onclick="toggleMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
+    <!-- Header Logo Banner -->
+    <nav class="navbar" style="position: absolute; top: 20px; left: 0; right: 0; z-index: 100; padding: 1rem 2rem;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="#home" class="logo" style="user-select: none;">LUIS ANTONIO<span>· ZERLB</span></a>
+            <div class="badge" style="margin-bottom: 0;">
+                <span class="badge-pulse"></span>
+                Full Stack & Networks
+            </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section & Dev Console -->
     <section class="hero" id="home">
-        <div class="hero-container">
-            <div class="badge">
-                <span class="badge-pulse"></span>
-                Disponible para proyectos
+        <div class="hero-layout">
+            <div class="hero-text">
+                <div class="badge">
+                    <span class="badge-pulse"></span>
+                    Disponible para proyectos
+                </div>
+                <h1 class="hero-title">
+                    Hola, soy <span class="name">Luis Antonio</span><br>
+                    Rosas Gómez
+                </h1>
+                <p class="hero-subtitle">
+                    <strong>Ingeniero en Sistemas Computacionales | Full Stack Developer</strong>. Especializado en APIs modulares RESTful, automatizaciones, redes empresariales seguras e hipervisores de virtualización.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i> Ver Proyectos
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">
+                        <i class="fas fa-paper-plane"></i> Escríbeme
+                    </a>
+                </div>
             </div>
-            <h1 class="hero-title">
-                Hola, soy <span class="name">Luis Antonio</span><br>
-                Rosas Gómez
-            </h1>
-            <p class="hero-subtitle">
-                <strong>Ingeniero en Sistemas Computacionales | Full Stack Developer</strong> especializado en 
-                arquitectura de APIs RESTful, virtualización de servidores, redes y seguridad de la información.
-            </p>
-            <div class="hero-buttons">
-                <a href="#projects" class="btn btn-primary">
-                    <i class="fas fa-rocket"></i> Ver Proyectos
-                </a>
-                <a href="#contact" class="btn btn-secondary">
-                    <i class="fas fa-paper-plane"></i> Contáctame
-                </a>
+
+            <!-- Terminal Mock Console -->
+            <div class="console-container glass">
+                <div class="console-header">
+                    <div class="console-dots">
+                        <div class="console-dot red"></div>
+                        <div class="console-dot yellow"></div>
+                        <div class="console-dot green"></div>
+                    </div>
+                    <span class="console-title">developer-console.sh</span>
+                </div>
+                <div class="console-body" id="consoleBody">
+                    <!-- Typing script runs here -->
+                </div>
             </div>
         </div>
         <a href="#about" class="scroll-down">
@@ -1128,12 +1145,12 @@
                 </div>
                 <div class="about-text">
                     <span class="section-tag">Sobre mí</span>
-                    <h3>Diseño de infraestructura modular y desarrollo de alto impacto</h3>
+                    <h3>Sistemas de alto desempeño y gestión de red institucional</h3>
                     <p>
-                        Profesional con amplia experiencia en la ingeniería de sistemas y diseño modular bajo arquitecturas de <strong>APIs RESTful</strong>. Me especializo en la integración de flujos interactivos (dashboards), autenticación robusta por tokens y despliegues estables en servidores corporativos vía <strong>Gunicorn, PM2 y Apache Reverse Proxy</strong>.
+                        Diseño e implemento soluciones informáticas robustas y estructuradas sobre arquitecturas **API RESTful** completas, administrando el control de roles (RBAC), tokens de sesión, firmas digitales y dashboards dinámicos.
                     </p>
                     <p>
-                        Cuento con amplia trayectoria administrando hipervisores de virtualización y optimizando entornos de red locales para asegurar la continuidad operativa y la alta seguridad de los sistemas de información institucionales.
+                        Cuento con amplia experiencia administrando pools de virtualización bajo **XCP-ng (XenServer)** y gestionando infraestructura de red local (Switches Core, VLANs en cascada, Firewalls y VPNs de administración remota) para más de **2,000 usuarios activos**.
                     </p>
                     <div class="about-stats">
                         <div class="stat-card">
@@ -1142,11 +1159,11 @@
                         </div>
                         <div class="stat-card">
                             <h5>2K+</h5>
-                            <p>Usuarios Soportados</p>
+                            <p>Usuarios en Producción</p>
                         </div>
                         <div class="stat-card">
                             <h5>4</h5>
-                            <p>CCNA Aprobados</p>
+                            <p>Módulos CCNA</p>
                         </div>
                     </div>
                 </div>
@@ -1158,29 +1175,29 @@
     <section class="section" id="skills">
         <div class="container">
             <div class="section-header reveal">
-                <span class="section-tag">Habilidades Técnicas</span>
-                <h2 class="section-title">Especialidades & Stack</h2>
-                <p class="section-desc">Domino tecnologías complementarias que me permiten integrar desde la programación Web hasta la infraestructura de Red.</p>
+                <span class="section-tag">Habilidades</span>
+                <h2 class="section-title">Mi Stack Tecnológico</h2>
+                <p class="section-desc">Integración perfecta entre software, base de datos y administración de servidores.</p>
             </div>
             <div class="skills-grid reveal">
                 <div class="skill-card glass">
                     <div class="skill-icon"><i class="fas fa-code"></i></div>
                     <h3>Desarrollo Web</h3>
-                    <p>Aplicaciones reactivas robustas y microservicios escalables de backend.</p>
-                    <div class="skills-tags">
+                    <p>Interfaces dinámicas y arquitecturas de microservicios robustas.</p>
+                    <div class="skill-tags">
                         <span class="skill-tag">React</span>
                         <span class="skill-tag">Node.js</span>
-                        <span class="skill-tag">JavaScript</span>
                         <span class="skill-tag">Express</span>
                         <span class="skill-tag">PHP</span>
                         <span class="skill-tag">Python</span>
+                        <span class="skill-tag">JavaScript</span>
                     </div>
                 </div>
                 <div class="skill-card glass">
                     <div class="skill-icon"><i class="fas fa-database"></i></div>
                     <h3>Bases de Datos</h3>
-                    <p>Diseño conceptual, normalización, optimización de queries y backups.</p>
-                    <div class="skills-tags">
+                    <p>Administración, consultas complejas, normalización y reporting.</p>
+                    <div class="skill-tags">
                         <span class="skill-tag">PostgreSQL</span>
                         <span class="skill-tag">MySQL</span>
                         <span class="skill-tag">SQL Server</span>
@@ -1191,8 +1208,8 @@
                 <div class="skill-card glass">
                     <div class="skill-icon"><i class="fas fa-server"></i></div>
                     <h3>DevOps & SysAdmin</h3>
-                    <p>Gestión de despliegues productivos, proxies y automatización en Linux.</p>
-                    <div class="skills-tags">
+                    <p>Administración y despliegue productivo de servidores Linux.</p>
+                    <div class="skill-tags">
                         <span class="skill-tag">Ubuntu Server</span>
                         <span class="skill-tag">PM2</span>
                         <span class="skill-tag">Apache</span>
@@ -1204,21 +1221,21 @@
                 <div class="skill-card glass">
                     <div class="skill-icon"><i class="fas fa-network-wired"></i></div>
                     <h3>Redes & Firewalls</h3>
-                    <p>Administración de topologías empresariales complejas y seguridad de red.</p>
-                    <div class="skills-tags">
-                        <span class="skill-tag">CCNA Academy</span>
+                    <p>Diseño y seguridad de topologías de datos empresariales.</p>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Cisco CCNA</span>
+                        <span class="skill-tag">Switches Core</span>
                         <span class="skill-tag">VLANs</span>
-                        <span class="skill-tag">VPNs</span>
                         <span class="skill-tag">Hillstone FW</span>
+                        <span class="skill-tag">VPNs</span>
                         <span class="skill-tag">Aruba APs</span>
-                        <span class="skill-tag">DNS</span>
                     </div>
                 </div>
                 <div class="skill-card glass">
                     <div class="skill-icon"><i class="fas fa-cubes"></i></div>
                     <h3>Virtualización</h3>
-                    <p>Creación de infraestructuras hiperconvergentes y administración de recursos.</p>
-                    <div class="skills-tags">
+                    <p>Hipervisores y almacenamiento unificado para servicios locales.</p>
+                    <div class="skill-tags">
                         <span class="skill-tag">XCP-ng</span>
                         <span class="skill-tag">XenServer</span>
                         <span class="skill-tag">VMware ESXi</span>
@@ -1227,63 +1244,123 @@
                 </div>
                 <div class="skill-card glass">
                     <div class="skill-icon"><i class="fas fa-shield-halved"></i></div>
-                    <h3>Ciberseguridad</h3>
-                    <p>Mitigación de vulnerabilidades y configuración de políticas de acceso estricto.</p>
-                    <div class="skills-tags">
-                        <span class="skill-tag">Ethical Hacking</span>
-                        <span class="skill-tag">Auditoría web</span>
+                    <h3>Seguridad Web</h3>
+                    <p>Protección contra inyecciones y validación estricta de credenciales.</p>
+                    <div class="skill-tags">
                         <span class="skill-tag">Cifrado XML</span>
-                        <span class="skill-tag">JWT</span>
+                        <span class="skill-tag">JWT Presets</span>
+                        <span class="skill-tag">Firma Digital</span>
+                        <span class="skill-tag">Auditoría OWASP</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Certifications Section -->
+    <!-- Certifications Section (Redesigned with custom inline SVG Cisco Logo) -->
     <section class="section" id="certifications">
         <div class="container">
             <div class="section-header reveal">
-                <span class="section-tag">Formación Continua</span>
-                <h2 class="section-title">Certificaciones y Cursos</h2>
-                <p class="section-desc">Formación técnica especializada aprobada y certificada.</p>
+                <span class="section-tag">Certificaciones</span>
+                <h2 class="section-title">Estudios y Certificaciones</h2>
+                <p class="section-desc">Cursos formales aprobados que respaldan mis habilidades informáticas.</p>
             </div>
             <div class="certifications-grid reveal">
+                <!-- CCNA 1 -->
                 <div class="cert-card glass">
-                    <div class="cert-logo cisco"><i class="fab fa-cisco"></i></div>
+                    <div class="cert-logo cisco">
+                        <!-- Custom Inline Wave Cisco Logo SVG -->
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="white" style="display: block;">
+                            <rect x="2" y="10" width="1.5" height="4" rx="0.75" />
+                            <rect x="4.5" y="8" width="1.5" height="8" rx="0.75" />
+                            <rect x="7" y="5.5" width="1.5" height="13" rx="0.75" />
+                            <rect x="9.5" y="4" width="1.5" height="16" rx="0.75" />
+                            <rect x="12" y="2" width="1.5" height="20" rx="0.75" />
+                            <rect x="14.5" y="4" width="1.5" height="16" rx="0.75" />
+                            <rect x="17" y="5.5" width="1.5" height="13" rx="0.75" />
+                            <rect x="19.5" y="8" width="1.5" height="8" rx="0.75" />
+                            <rect x="22" y="10" width="1.5" height="4" rx="0.75" />
+                        </svg>
+                    </div>
                     <div class="cert-info">
                         <h4>CCNA 1: Introduction to Networks</h4>
                         <p>Cisco Networking Academy</p>
                     </div>
                 </div>
+                
+                <!-- CCNA 2 -->
                 <div class="cert-card glass">
-                    <div class="cert-logo cisco"><i class="fab fa-cisco"></i></div>
+                    <div class="cert-logo cisco">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="white" style="display: block;">
+                            <rect x="2" y="10" width="1.5" height="4" rx="0.75" />
+                            <rect x="4.5" y="8" width="1.5" height="8" rx="0.75" />
+                            <rect x="7" y="5.5" width="1.5" height="13" rx="0.75" />
+                            <rect x="9.5" y="4" width="1.5" height="16" rx="0.75" />
+                            <rect x="12" y="2" width="1.5" height="20" rx="0.75" />
+                            <rect x="14.5" y="4" width="1.5" height="16" rx="0.75" />
+                            <rect x="17" y="5.5" width="1.5" height="13" rx="0.75" />
+                            <rect x="19.5" y="8" width="1.5" height="8" rx="0.75" />
+                            <rect x="22" y="10" width="1.5" height="4" rx="0.75" />
+                        </svg>
+                    </div>
                     <div class="cert-info">
                         <h4>CCNA 2: Routing & Switching Essentials</h4>
                         <p>Cisco Networking Academy</p>
                     </div>
                 </div>
+
+                <!-- CCNA 3 -->
                 <div class="cert-card glass">
-                    <div class="cert-logo cisco"><i class="fab fa-cisco"></i></div>
+                    <div class="cert-logo cisco">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="white" style="display: block;">
+                            <rect x="2" y="10" width="1.5" height="4" rx="0.75" />
+                            <rect x="4.5" y="8" width="1.5" height="8" rx="0.75" />
+                            <rect x="7" y="5.5" width="1.5" height="13" rx="0.75" />
+                            <rect x="9.5" y="4" width="1.5" height="16" rx="0.75" />
+                            <rect x="12" y="2" width="1.5" height="20" rx="0.75" />
+                            <rect x="14.5" y="4" width="1.5" height="16" rx="0.75" />
+                            <rect x="17" y="5.5" width="1.5" height="13" rx="0.75" />
+                            <rect x="19.5" y="8" width="1.5" height="8" rx="0.75" />
+                            <rect x="22" y="10" width="1.5" height="4" rx="0.75" />
+                        </svg>
+                    </div>
                     <div class="cert-info">
                         <h4>CCNA 3: Scaling Networks</h4>
                         <p>Cisco Networking Academy</p>
                     </div>
                 </div>
+
+                <!-- CCNA 4 -->
                 <div class="cert-card glass">
-                    <div class="cert-logo cisco"><i class="fab fa-cisco"></i></div>
+                    <div class="cert-logo cisco">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="white" style="display: block;">
+                            <rect x="2" y="10" width="1.5" height="4" rx="0.75" />
+                            <rect x="4.5" y="8" width="1.5" height="8" rx="0.75" />
+                            <rect x="7" y="5.5" width="1.5" height="13" rx="0.75" />
+                            <rect x="9.5" y="4" width="1.5" height="16" rx="0.75" />
+                            <rect x="12" y="2" width="1.5" height="20" rx="0.75" />
+                            <rect x="14.5" y="4" width="1.5" height="16" rx="0.75" />
+                            <rect x="17" y="5.5" width="1.5" height="13" rx="0.75" />
+                            <rect x="19.5" y="8" width="1.5" height="8" rx="0.75" />
+                            <rect x="22" y="10" width="1.5" height="4" rx="0.75" />
+                        </svg>
+                    </div>
                     <div class="cert-info">
                         <h4>CCNA 4: Connecting Networks</h4>
                         <p>Cisco Networking Academy</p>
                     </div>
                 </div>
+
+                <!-- Python -->
                 <div class="cert-card glass">
                     <div class="cert-logo python"><i class="fab fa-python"></i></div>
                     <div class="cert-info">
-                        <h4>PCAP - Programming in Python</h4>
+                        <h4>PCAP - Python Essentials</h4>
                         <p>Cisco Networking Academy</p>
                     </div>
                 </div>
+
+                <!-- Google -->
                 <div class="cert-card glass">
                     <div class="cert-logo google"><i class="fab fa-google"></i></div>
                     <div class="cert-info">
@@ -1291,11 +1368,13 @@
                         <p>Google Activate</p>
                     </div>
                 </div>
+
+                <!-- Udemy -->
                 <div class="cert-card glass">
                     <div class="cert-logo udemy"><i class="fas fa-shield-halved"></i></div>
                     <div class="cert-info">
                         <h4>Seguridad Informática</h4>
-                        <p>Udemy Professional</p>
+                        <p>Udemy Business</p>
                     </div>
                 </div>
             </div>
@@ -1307,14 +1386,22 @@
         <div class="container">
             <div class="section-header reveal">
                 <span class="section-tag">Portafolio</span>
-                <h2 class="section-title">Proyectos de Producción</h2>
-                <p class="section-desc">Sistemas que he desarrollado e implementado en entornos operativos reales.</p>
+                <h2 class="section-title">Proyectos Destacados</h2>
+                <p class="section-desc">Sistemas completos implementados en servidores de producción institucional y personal.</p>
             </div>
+
+            <!-- Interactive filters -->
+            <div class="project-filters reveal">
+                <button class="filter-btn active" onclick="filterProjects('all')">Todos</button>
+                <button class="filter-btn" onclick="filterProjects('web')">Full Stack</button>
+                <button class="filter-btn" onclick="filterProjects('networks')">Infraestructura</button>
+            </div>
+
             <div class="projects-grid reveal">
                 <!-- SAVITAR -->
-                <div class="project-card glass">
-                    <div class="project-cover" style="background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);">
-                        <i class="fas fa-chart-line"></i>
+                <div class="project-card glass" data-category="web">
+                    <div class="project-cover" style="background: linear-gradient(135deg, #1e1b4b 0%, #3b0764 100%);">
+                        <i class="fas fa-desktop"></i>
                         <div class="project-cover-overlay">
                             <a href="https://github.com/ZERLB/app_Savitar" target="_blank" class="project-action-btn"><i class="fab fa-github"></i></a>
                         </div>
@@ -1327,13 +1414,13 @@
                             <span class="project-tag">XCP-ng</span>
                         </div>
                         <h3>SAVITAR Monitor</h3>
-                        <p>Panel integral para monitoreo de infraestructura física y virtual. Conecta consolas SSH interactivas en vivo y cuenta con panel estilo XenCenter para el encendido, apagado e inicialización de RAM/CPUs en VMs de XCP-ng.</p>
+                        <p>Dashboard avanzado de monitoreo de servidores. Conecta terminales SSH en caliente, sincroniza bitácoras con Notion por API y tiene un módulo estilo XenCenter para el apagado, encendido y edición de recursos en VMs de XCP-ng.</p>
                     </div>
                 </div>
 
                 <!-- NEXUS -->
-                <div class="project-card glass">
-                    <div class="project-cover" style="background: linear-gradient(135deg, #7a1930 0%, #9d2148 100%);">
+                <div class="project-card glass" data-category="web">
+                    <div class="project-cover" style="background: linear-gradient(135deg, #881337 0%, #4c0519 100%);">
                         <i class="fas fa-graduation-cap"></i>
                         <div class="project-cover-overlay">
                             <a href="https://github.com/ZERLB" target="_blank" class="project-action-btn"><i class="fab fa-github"></i></a>
@@ -1342,19 +1429,19 @@
                     <div class="project-content">
                         <div class="project-tags">
                             <span class="project-tag">React</span>
-                            <span class="project-tag">Node.js</span>
+                            <span class="project-tag">Express</span>
                             <span class="project-tag">MySQL</span>
-                            <span class="project-tag">Enterprise</span>
+                            <span class="project-tag">Redes</span>
                         </div>
                         <h3>Sistema Universitario NEXUS</h3>
-                        <p>Portal modular académico para control de horarios, actas escolares oficiales, oficialía de partes y registro electrónico de alumnos de la universidad. Atiende a más de 2,000 usuarios activos.</p>
+                        <p>Portal modular institucional para gestión de actas oficiales, oficialía de partes, carga de archivos y control escolar académico. Diseñado bajo estándares de seguridad para +2,000 alumnos.</p>
                     </div>
                 </div>
 
-                <!-- Títulos SEP -->
-                <div class="project-card glass">
-                    <div class="project-cover" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%);">
-                        <i class="fas fa-file-signature"></i>
+                <!-- SEP XML -->
+                <div class="project-card glass" data-category="web">
+                    <div class="project-cover" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+                        <i class="fas fa-file-contract"></i>
                         <div class="project-cover-overlay">
                             <a href="https://github.com/ZERLB" target="_blank" class="project-action-btn"><i class="fab fa-github"></i></a>
                         </div>
@@ -1367,14 +1454,31 @@
                             <span class="project-tag">SEP API</span>
                         </div>
                         <h3>Títulos Electrónicos SEP</h3>
-                        <p>Módulo de integración directa con la base de datos de la SEP mexicana. Genera, cifra y firma digitalmente archivos XML de actas oficiales de títulos universitarios en tiempo real.</p>
+                        <p>Módulo SOAP para firmar, cifrar y timbrar actas electrónicas de graduación. Permite la integración directa con la base de datos de la SEP mexicana bajo formatos de encriptación válidos.</p>
                     </div>
                 </div>
 
-                <!-- Correos masivos -->
-                <div class="project-card glass">
-                    <div class="project-cover" style="background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);">
-                        <i class="fas fa-envelope-open-text"></i>
+                <!-- Redes UNISA -->
+                <div class="project-card glass" data-category="networks">
+                    <div class="project-cover" style="background: linear-gradient(135deg, #0369a1 0%, #0c4a6e 100%);">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            <span class="project-tag">Hillstone FW</span>
+                            <span class="project-tag">Core Switches</span>
+                            <span class="project-tag">VLANs</span>
+                            <span class="project-tag">Aruba APs</span>
+                        </div>
+                        <h3>Infraestructura de Red UNISA</h3>
+                        <p>Optimización y reestructuración de la topología local universitaria. Configuración de enlaces simétricos de 300 Mbps, firewalls de borde, VPNs seguras y VLANs corporativas segmentadas para estudiantes y docentes.</p>
+                    </div>
+                </div>
+
+                <!-- Correo Masivo -->
+                <div class="project-card glass" data-category="web">
+                    <div class="project-cover" style="background: linear-gradient(135deg, #065f46 0%, #064e3b 100%);">
+                        <i class="fas fa-paper-plane"></i>
                         <div class="project-cover-overlay">
                             <a href="https://github.com/ZERLB/correos_masivos" target="_blank" class="project-action-btn"><i class="fab fa-github"></i></a>
                         </div>
@@ -1384,17 +1488,17 @@
                             <span class="project-tag">React</span>
                             <span class="project-tag">Express</span>
                             <span class="project-tag">Excel Engine</span>
-                            <span class="project-tag">Mailing</span>
+                            <span class="project-tag">Spam Block</span>
                         </div>
                         <h3>Envío de Correo Masivo</h3>
-                        <p>Plataforma para campañas corporativas de correo hiper-personalizadas. Procesa miles de filas de archivos Excel, incorpora un validador anti-rebotes y modula la velocidad de despacho para evitar spam.</p>
+                        <p>Software para despachar miles de correos de campañas con plantillas HTML enriquecidas. Incorpora un lector inteligente de Excel con filtrado de rebotes y throttling de velocidad.</p>
                     </div>
                 </div>
 
-                <!-- Consultorios v2 -->
-                <div class="project-card glass">
-                    <div class="project-cover" style="background: linear-gradient(135deg, #164e63 0%, #0891b2 100%);">
-                        <i class="fas fa-stethoscope"></i>
+                <!-- Consultorios -->
+                <div class="project-card glass" data-category="web">
+                    <div class="project-cover" style="background: linear-gradient(135deg, #155e75 0%, #164e63 100%);">
+                        <i class="fas fa-notes-medical"></i>
                         <div class="project-cover-overlay">
                             <a href="https://github.com/ZERLB/consultorio_unisa" target="_blank" class="project-action-btn"><i class="fab fa-github"></i></a>
                         </div>
@@ -1402,31 +1506,12 @@
                     <div class="project-content">
                         <div class="project-tags">
                             <span class="project-tag">React</span>
-                            <span class="project-tag">Express</span>
+                            <span class="project-tag">Node.js</span>
                             <span class="project-tag">MySQL</span>
                             <span class="project-tag">Medical</span>
                         </div>
-                        <h3>Consultorio Clínico UNISA</h3>
-                        <p>Software clínico adaptado a dispositivos móviles para médicos institucionales. Administra expedientes de pacientes, diagnósticos rápidos, seguimientos ginecológicos detallados e historial de consultas.</p>
-                    </div>
-                </div>
-
-                <!-- Inglés -->
-                <div class="project-card glass">
-                    <div class="project-cover" style="background: linear-gradient(135deg, #513c06 0%, #b45309 100%);">
-                        <i class="fas fa-language"></i>
-                        <div class="project-cover-overlay">
-                            <a href="https://github.com/ZERLB/curso_ingles_escuelas" target="_blank" class="project-action-btn"><i class="fab fa-github"></i></a>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <div class="project-tags">
-                            <span class="project-tag">PHP</span>
-                            <span class="project-tag">MySQL</span>
-                            <span class="project-tag">QR Code</span>
-                        </div>
-                        <h3>Control de Cursos de Inglés</h3>
-                        <p>Aplicación SaaS para la gestión e inscripción estudiantil. Genera códigos QR únicos e infalsificables en documentos de validación, permitiendo a los profesores calificar y pasar lista.</p>
+                        <h3>Expedientes Clínicos v2</h3>
+                        <p>Sistema clínico desarrollado a la medida para consultorios médicos. Administra citas, expedientes, historial de recetas y seguimiento ginecológico con perfiles restringidos.</p>
                     </div>
                 </div>
             </div>
@@ -1438,22 +1523,22 @@
         <div class="container">
             <div class="section-header reveal">
                 <span class="section-tag">Trayectoria</span>
-                <h2 class="section-title">Experiencia Profesional</h2>
-                <p class="section-desc">Mi recorrido laboral e institucional liderando redes y desarrollo.</p>
+                <h2 class="section-title">Experiencia Laboral</h2>
+                <p class="section-desc">Mi camino laboral administrando y desarrollando sistemas de TI.</p>
             </div>
-            <div class="timeline reveal">
+            <div class="timeline reveal" style="display: flex; flex-direction: column;">
                 <!-- Item 1 -->
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-card glass">
-                        <span class="timeline-date">Enero 2024 - Actualidad</span>
+                        <span class="timeline-date">Ene 2024 - Actualidad</span>
                         <h3>T.O.C. Dirección de Tecnologías</h3>
                         <h4>Universidad de la Salud</h4>
                         <ul>
-                            <li>Ingeniería de software en portales universitarios de matriculación y escolar.</li>
-                            <li>Administración y aprovisionamiento del pool de virtualización XCP-ng.</li>
-                            <li>Ajustes de switches core/distribución, VLANs en cascada y VPNs de administración.</li>
-                            <li>Monitoreo preventivo del tráfico y enlaces institucionales.</li>
+                            <li>Ingeniería de software full-stack para el portal académico escolar de la universidad.</li>
+                            <li>Administración del pool de virtualización con hipervisores XCP-ng (Xen Server).</li>
+                            <li>Operación de Core switches, VLANs segmentadas y VPNs administrativas seguras.</li>
+                            <li>Monitoreo preventivo del tráfico de enlaces dedicados de 300 Mbps.</li>
                         </ul>
                     </div>
                 </div>
@@ -1462,13 +1547,13 @@
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-card glass">
-                        <span class="timeline-date">Agosto 2022 - Diciembre 2023</span>
+                        <span class="timeline-date">Ago 2022 - Dic 2023</span>
                         <h3>Encargado de Informática</h3>
                         <h4>Universidad de la Salud</h4>
                         <ul>
-                            <li>Supervisión y mantenimiento preventivo de infraestructura de red y servidores corporativos.</li>
-                            <li>Soporte de nivel 2 y 3 diagnosticando switches de distribución y firewalls.</li>
-                            <li>Liderazgo en el despliegue del proyecto de voz y datos institucionales.</li>
+                            <li>Coordinación de la infraestructura física del centro de datos y redes internas.</li>
+                            <li>Diagnóstico y soporte avanzado de routers y firewalls Hillstone locales.</li>
+                            <li>Liderazgo en el despliegue del cableado estructurado para voz y datos.</li>
                         </ul>
                     </div>
                 </div>
@@ -1478,10 +1563,10 @@
                     <div class="timeline-dot"></div>
                     <div class="timeline-card glass">
                         <span class="timeline-date">2018 - 2022</span>
-                        <h3>Ingeniería en Sistemas Computacionales</h3>
+                        <h3>Ing. en Sistemas Computacionales</h3>
                         <h4>Universidad Tecnológica de México (UNITEC)</h4>
                         <ul>
-                            <li>Especialización en desarrollo, protocolos de enrutamiento y estructuras de almacenamiento de datos relacionales.</li>
+                            <li>Especialización en desarrollo de sistemas, base de datos relacionales y redes.</li>
                         </ul>
                     </div>
                 </div>
@@ -1494,13 +1579,13 @@
         <div class="container">
             <div class="section-header reveal">
                 <span class="section-tag">Contacto</span>
-                <h2 class="section-title">¿Trabajamos Juntos?</h2>
-                <p class="section-desc">Tienes una propuesta de proyecto? Envíame un correo directo o contáctame en redes.</p>
+                <h2 class="section-title">¡Escríbeme!</h2>
+                <p class="section-desc">¿Tienes un proyecto, consultoría o vacante interesante? Contáctame hoy mismo.</p>
             </div>
             <div class="contact-layout reveal">
                 <div class="contact-details">
                     <h3>Ponte en contacto</h3>
-                    <p>Estoy a tu disposición para proyectos de desarrollo, infraestructuras en la nube o consultoría de red corporativa.</p>
+                    <p>Estoy disponible para consultorías de red local, administración de hipervisores o desarrollo backend/API.</p>
                     <div class="contact-links">
                         <a href="mailto:luisrosasgom@gmail.com" class="contact-item">
                             <div class="contact-icon"><i class="fas fa-envelope"></i></div>
@@ -1512,12 +1597,12 @@
                         <a href="tel:+525580033962" class="contact-item">
                             <div class="contact-icon"><i class="fas fa-phone"></i></div>
                             <div>
-                                <span class="contact-label">Teléfono celular</span>
+                                <span class="contact-label">Teléfono móvil</span>
                                 <span class="contact-value">+52 55 8003 3962</span>
                             </div>
                         </a>
                         <div class="contact-item">
-                            <div class="contact-icon"><i class="fas fa-map-location-dot"></i></div>
+                            <div class="contact-icon"><i class="fas fa-location-dot"></i></div>
                             <div>
                                 <span class="contact-label">Ubicación</span>
                                 <span class="contact-value">Ciudad de México, México</span>
@@ -1558,6 +1643,45 @@
         <p class="footer-text">© 2026 Luis Antonio Rosas Gómez. Diseñado de forma premium con amor.</p>
     </footer>
 
+    <!-- macOS Sonoma Bottom Floating Dock -->
+    <div class="dock-container">
+        <div class="dock glass">
+            <a href="#home" class="dock-item" style="color: #6366f1;">
+                <i class="fas fa-house"></i>
+                <span class="dock-tooltip">Inicio</span>
+            </a>
+            <a href="#about" class="dock-item" style="color: #a855f7;">
+                <i class="fas fa-user-astronaut"></i>
+                <span class="dock-tooltip">Sobre Mí</span>
+            </a>
+            <a href="#skills" class="dock-item" style="color: #ec4899;">
+                <i class="fas fa-cubes"></i>
+                <span class="dock-tooltip">Habilidades</span>
+            </a>
+            <a href="#certifications" class="dock-item" style="color: #f59e0b;">
+                <i class="fas fa-certificate"></i>
+                <span class="dock-tooltip">Certificaciones</span>
+            </a>
+            <a href="#projects" class="dock-item" style="color: #10b981;">
+                <i class="fas fa-folder-open"></i>
+                <span class="dock-tooltip">Proyectos</span>
+            </a>
+            <a href="#experience" class="dock-item" style="color: #3b82f6;">
+                <i class="fas fa-briefcase"></i>
+                <span class="dock-tooltip">Experiencia</span>
+            </a>
+            <div class="dock-separator"></div>
+            <a href="https://github.com/ZERLB" target="_blank" class="dock-item" style="color: #f3f4f6;">
+                <i class="fab fa-github"></i>
+                <span class="dock-tooltip">GitHub</span>
+            </a>
+            <a href="mailto:luisrosasgom@gmail.com" class="dock-item" style="color: #ef4444;">
+                <i class="fas fa-envelope"></i>
+                <span class="dock-tooltip">Email</span>
+            </a>
+        </div>
+    </div>
+
     <script>
         // ========== MOBILE MENU TOGGLE ==========
         function toggleMenu() {
@@ -1572,50 +1696,117 @@
             });
         });
 
-        // ========== SCROLL EFFECTS (NAVBAR & ACTIVE LINK) ==========
-        const nav = document.querySelector('.navbar');
+        // ========== SCROLL EFFECTS ==========
         const sections = document.querySelectorAll('section');
-        const navItems = document.querySelectorAll('.nav-links a');
+        const dockItems = document.querySelectorAll('.dock-item');
 
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 40) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-
-            // Highlighting active nav links
             let current = '';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.clientHeight;
-                if (window.scrollY >= (sectionTop - 150)) {
+                if (window.scrollY >= (sectionTop - 180)) {
                     current = section.getAttribute('id');
                 }
             });
 
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('href').slice(1) === current) {
-                    item.classList.add('active');
+            // Highlight dock items based on active section
+            dockItems.forEach(item => {
+                item.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
+                item.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                const href = item.getAttribute('href');
+                if (href && href.slice(1) === current) {
+                    item.style.backgroundColor = 'rgba(99, 102, 241, 0.15)';
+                    item.style.borderColor = 'rgba(99, 102, 241, 0.4)';
                 }
             });
         });
 
-        // ========== SMOOTH INTERSECTION OBSERVER FOR REVEALS ==========
+        // ========== REVEAL ON SCROLL ==========
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
                 }
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
 
         document.querySelectorAll('.reveal').forEach(el => {
             revealObserver.observe(el);
         });
 
-        // ========== CUSTOM FLUID TRAILING CURSOR ==========
+        // ========== FLUID PARTICLE NETWORK BACKGROUND ==========
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.radius = Math.random() * 1.5 + 0.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(99, 102, 241, 0.2)';
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        const numParticles = Math.min(60, Math.round((canvas.width * canvas.height) / 25000));
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        function drawLines() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(99, 102, 241, ${0.12 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            drawLines();
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ========== CUSTOM FLUID CURSOR (Desktop Only) ==========
         const cursorOuter = document.querySelector('.cursor-outer');
         const cursorInner = document.querySelector('.cursor-inner');
         let mouseX = 0, mouseY = 0;
@@ -1624,27 +1815,108 @@
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            
             cursorInner.style.left = mouseX + 'px';
             cursorInner.style.top = mouseY + 'px';
         });
 
         function animateOuterCursor() {
-            cOuterX += (mouseX - cOuterX) * 0.15;
-            cOuterY += (mouseY - cOuterY) * 0.15;
+            cOuterX += (mouseX - cOuterX) * 0.16;
+            cOuterY += (mouseY - cOuterY) * 0.16;
             cursorOuter.style.left = cOuterX + 'px';
             cursorOuter.style.top = cOuterY + 'px';
             requestAnimationFrame(animateOuterCursor);
         }
         animateOuterCursor();
 
-        // Hover expand classes
         document.querySelectorAll('a, button, input, textarea, .project-card, .skill-card, .cert-card').forEach(el => {
             el.addEventListener('mouseenter', () => document.body.classList.add('hovered-element'));
             el.addEventListener('mouseleave', () => document.body.classList.remove('hovered-element'));
         });
 
-        // ========== CONTACT FORM DIRECT DISPATCH ==========
+        // ========== MOCK DEVELOPER CONSOLE LOGIC ==========
+        const consoleBody = document.getElementById('consoleBody');
+        const logs = [
+            { type: 'cmd', text: 'systemctl status savitar-core' },
+            { type: 'output', text: '● savitar-core.service - Savitar Infrastructure Monitor Daemon\n   Loaded: loaded (/etc/systemd/system/savitar-core.service; enabled)\n   Active: active (running) since Fri May 29 13:00:00 CST; 2h ago\n   Main PID: 5009 (node)\n   Tasks: 18 (limit: 4915)\n   Memory: 84.6M\n   CGroup: /system.slice/savitar-core.service' },
+            { type: 'cmd', text: 'cisco-academy --verify-ccna --id 33892328' },
+            { type: 'output', text: 'Connecting to Cisco Networking Academy API...\n[OK] Identity match: Luis Antonio Rosas Gómez\n[OK] Modules verified:\n     - CCNA 1: Introduction to Networks (Grade: A)\n     - CCNA 2: Routing and Switching Essentials (Grade: A)\n     - CCNA 3: Scaling Networks (Grade: A)\n     - CCNA 4: Connecting Networks (Grade: A)' },
+            { type: 'cmd', text: 'xcp-pool-list --hypervisors' },
+            { type: 'output', text: '📍 Pool: Universidad_de_la_Salud_10_24_4_27\n   - Host 1: 100.94.231.51 (XCP-ng 8.2) | 256GB RAM [Active]\n     -> VMs Running: 18 / 24\n     -> vCPUs Total: 72 cores' },
+            { type: 'cmd', text: 'get-skills --developer-level --expert' },
+            { type: 'output', text: '🎯 Expert Core Stack:\n   - Frontend: React / Vite / TailwindCSS / TS\n   - Backend: Node.js / Express / RESTful / PHP\n   - Devops: Linux / XCP-ng / PM2 / Nginx / Apache / Tailscale\n   - Network: Core Switches / VLANs / Hillstone Firewall' }
+        ];
+
+        let logIndex = 0;
+
+        function runConsoleLogs() {
+            if (logIndex >= logs.length) {
+                // finished, add static cursor
+                const line = document.createElement('div');
+                line.className = 'console-line';
+                line.innerHTML = `<span class="console-prompt">rlg@server:~$</span> <span class="typing-active">_</span>`;
+                consoleBody.appendChild(line);
+                return;
+            }
+
+            const item = logs[logIndex];
+            const line = document.createElement('div');
+            line.className = 'console-line';
+
+            if (item.type === 'cmd') {
+                line.innerHTML = `<span class="console-prompt">rlg@server:~$</span> <span class="console-info"></span>`;
+                consoleBody.appendChild(line);
+                const span = line.querySelector('.console-info');
+                
+                // typewriter command
+                let charIndex = 0;
+                const interval = setInterval(() => {
+                    if (charIndex < item.text.length) {
+                        span.textContent += item.text[charIndex];
+                        charIndex++;
+                    } else {
+                        clearInterval(interval);
+                        logIndex++;
+                        setTimeout(runConsoleLogs, 600);
+                    }
+                }, 35);
+            } else {
+                // instant output
+                line.innerHTML = `<pre style="white-space: pre-wrap; margin-top: 4px;" class="console-output">${item.text}</pre>`;
+                consoleBody.appendChild(line);
+                logIndex++;
+                setTimeout(runConsoleLogs, 1000);
+            }
+
+            // scroll console
+            consoleBody.scrollTop = consoleBody.scrollHeight;
+        }
+
+        // Start console typing simulation
+        setTimeout(runConsoleLogs, 800);
+
+        // ========== PROJECT INTERACTIVE FILTER ==========
+        function filterProjects(category) {
+            const cards = document.querySelectorAll('.project-card');
+            const btns = document.querySelectorAll('.filter-btn');
+
+            btns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(category)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            cards.forEach(card => {
+                const cat = card.getAttribute('data-category');
+                if (category === 'all' || cat === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // ========== CONTACT FORM FORM DISPATCH ==========
         document.getElementById('contactForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('name').value;
