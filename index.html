@@ -1751,6 +1751,57 @@
                         <p>Sistema clínico desarrollado a la medida para consultorios médicos. Administra citas, expedientes, historial de recetas y seguimiento ginecológico con perfiles restringidos.</p>
                     </div>
                 </div>
+
+                <!-- Moodle Enterprise -->
+                <div class="project-card glass" data-category="networks">
+                    <div class="project-cover" style="background: linear-gradient(135deg, #ea580c 0%, #9a3412 100%);">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            <span class="project-tag">Moodle LMS</span>
+                            <span class="project-tag">Apache / FPM</span>
+                            <span class="project-tag">MySQL Segregation</span>
+                            <span class="project-tag">Tuning</span>
+                        </div>
+                        <h3>Moodle Enterprise Hub</h3>
+                        <p>Despliegue y optimización de Campus Virtual y Moodle PAI. Gestión de bases de datos independientes, tuneo de memoria FPM y caché para soportar picos de alta concurrencia estudiantil.</p>
+                    </div>
+                </div>
+
+                <!-- DB Clustering & Replication -->
+                <div class="project-card glass" data-category="networks">
+                    <div class="project-cover" style="background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            <span class="project-tag">MySQL Master-Slave</span>
+                            <span class="project-tag">PostgreSQL 14</span>
+                            <span class="project-tag">Hot Standby</span>
+                            <span class="project-tag">Backup Autom.</span>
+                        </div>
+                        <h3>Clúster de Bases de Datos & Replicas</h3>
+                        <p>Diseño e implementación de arquitectura de base de datos de alta disponibilidad. Replicación en tiempo real hacia servidores esclavos (Cactus Hub) y clústeres PostgreSQL 14 para respaldos continuos.</p>
+                    </div>
+                </div>
+
+                <!-- Koha ILS -->
+                <div class="project-card glass" data-category="networks">
+                    <div class="project-cover" style="background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            <span class="project-tag">Koha ILS</span>
+                            <span class="project-tag">Ubuntu 22.04</span>
+                            <span class="project-tag">MariaDB</span>
+                            <span class="project-tag">OPAC / Marc21</span>
+                        </div>
+                        <h3>Koha ILS Deployment</h3>
+                        <p>Instalación, personalización y puesta en marcha del gestor bibliográfico integrado Koha. Indexación de catálogos físicos, base de datos MariaDB y soporte para transacciones de préstamo en tiempo real.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -2121,11 +2172,17 @@
         const consoleBody = document.getElementById('consoleBody');
         const logs = [
             { type: 'cmd', text: 'systemctl status savitar-core' },
-            { type: 'output', text: '● savitar-core.service - Savitar Infrastructure Monitor Daemon\n   Loaded: loaded (/etc/systemd/system/savitar-core.service; enabled)\n   Active: active (running) since Fri May 29 13:00:00 CST; 2h ago\n   Main PID: 5009 (node)\n   Tasks: 18 (limit: 4915)\n   Memory: 84.6M\n   CGroup: /system.slice/savitar-core.service' },
+            { type: 'output', text: '● savitar-core.service - Savitar Infrastructure Monitor Daemon\n   Loaded: loaded (/etc/systemd/system/savitar-core.service; enabled)\n   Active: active (running) since Fri May 29 13:00:00 CST; 2h ago\n   Main PID: 5009 (node)\n   Memory: 84.6M\n   Status: "Monitoring 25 active virtual nodes via Tailscale"' },
+            { type: 'cmd', text: 'tailscale status --peers=5' },
+            { type: 'output', text: '100.94.231.51   unisa-1              linux   active (XCP-ng Hypervisor)\n100.86.229.13   koha                 linux   active (Koha ILS Server)\n100.67.62.102   dbrespaldo           linux   active (DB replication master)\n100.91.71.25    sistemasdte          linux   active (Aplicativos DTE/SGABS)\n100.85.85.52    wordpress-unisa      linux   active (SIGU-U Hub)\n[+19 nodes online in Mesh Network]' },
+            { type: 'cmd', text: 'systemctl status koha-common' },
+            { type: 'output', text: '● koha-common.service - LSB: Koha virtual hosting daemon\n   Loaded: loaded (/etc/init.d/koha-common; generated)\n   Active: active (running) since Thu May 28 09:12:04 CST; 1 day ago\n   Tasks: 12 (limit: 9438)\n   Memory: 112.4M' },
+            { type: 'cmd', text: 'systemctl status postgresql@14-main' },
+            { type: 'output', text: '● postgresql@14-main.service - PostgreSQL Cluster 14-main\n   Loaded: loaded (/lib/systemd/system/postgresql@.service; enabled)\n   Active: active (running) since Mon May 25 08:00:12 CST; 4 days ago\n   Main PID: 12408 (postgres)' },
             { type: 'cmd', text: 'cisco-academy --verify-ccna --id 33892328' },
             { type: 'output', text: 'Connecting to Cisco Networking Academy API...\n[OK] Identity match: Luis Antonio Rosas Gómez\n[OK] Modules verified:\n     - CCNA 1: Introduction to Networks (Grade: A)\n     - CCNA 2: Routing and Switching Essentials (Grade: A)\n     - CCNA 3: Scaling Networks (Grade: A)\n     - CCNA 4: Connecting Networks (Grade: A)' },
             { type: 'cmd', text: 'xcp-pool-list --hypervisors' },
-            { type: 'output', text: '📍 Pool: Universidad_de_la_Salud_10_24_4_27\n   - Host 1: 100.94.231.51 (XCP-ng 8.2) | 256GB RAM [Active]\n     -> VMs Running: 18 / 24\n     -> vCPUs Total: 72 cores' },
+            { type: 'output', text: '📍 Pool: Universidad_de_la_Salud_XCP_ng\n   - Host 1: 100.94.231.51 (XCP-ng 8.2) | 256GB RAM [Active]\n     -> VMs Running: 24 / 25\n     -> vCPUs Total: 72 cores' },
             { type: 'cmd', text: 'get-skills --developer-level --expert' },
             { type: 'output', text: '🎯 Expert Core Stack:\n   - Frontend: React / Vite / TailwindCSS / TS\n   - Backend: Node.js / Express / RESTful / PHP\n   - Devops: Linux / XCP-ng / PM2 / Nginx / Apache / Tailscale\n   - Network: Core Switches / VLANs / Hillstone Firewall' }
         ];
