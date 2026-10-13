@@ -17,9 +17,9 @@
 Una sola página que cuenta lo que hago y lo que opero, con datos del inventario real de octubre de 2026:
 
 - **Sobre mí y datos rápidos.** Rol, enfoque, idiomas y lo que estoy usando ahora.
-- **Infraestructura en producción.** Mapa SVG de la topología de la Universidad de la Salud: dos HAProxy, aplicaciones Node y PHP, tres Moodle y Canvas, Koha y DSpace, capa de datos MySQL / MariaDB / PostgreSQL / Redis, respaldos nocturnos, NAS, pool XCP-ng y malla Tailscale. Con cifras: 27 servidores, 18 VMs, 8 bases respaldadas cada noche, 16 URL vigiladas.
-- **Stack por capas.** Lenguajes, backend, frontend, bases de datos, servidores y virtualización, redes y seguridad, plataformas, IA y flujo de entrega.
-- **Proyectos.** Savitar (mi centro de operación), SIGU, NEXUS v2, campos clínicos, reactivos, asistente virtual con voz, 100 UNISOS dijeron, Nobel, clínica universitaria, cursos de inglés, suite DTE, Mente (plugin de Claude Code), pool XCP-ng, respaldos, migración MySQL 8.4, aulas virtuales, red y perímetro, un juego en Godot y este sitio. Donde existe una página pública de entrada, está enlazada.
+- **Infraestructura en producción.** Mapa SVG resumido de lo que opero, sin nombres ni direcciones: balanceadores HAProxy, aplicaciones Node y PHP, Moodle y Canvas, Koha y DSpace, capa de datos MySQL / MariaDB / PostgreSQL / Redis, respaldos nocturnos, NAS, pool XCP-ng y red de administración cifrada. Con cifras: 27 servidores, 18 VMs, 20+ sistemas.
+- **Stack por capas.** Lenguajes, backend, frontend, bases de datos, servidores y virtualización, redes y seguridad, plataformas, IA, flujo de entrega y creación de videojuegos (Godot 4).
+- **Proyectos.** Savitar (mi centro de operación), SIGU, NEXUS v2, campos clínicos, reactivos, asistente virtual con voz, 100 UNISOS dijeron, Nobel, clínica universitaria, cursos de inglés, suite DTE, Mente (plugin de Claude Code), pool XCP-ng, respaldos, actualización mayor de MySQL, aulas virtuales, red y perímetro, un juego en Godot 4 y este sitio. Cada sistema se describe por lo que hace; el código institucional es privado y no se publican direcciones internas.
 - **Experiencia, certificaciones y método de trabajo.**
 - **Contacto.** Correo, teléfono y un formulario que abre tu cliente de correo con el mensaje listo; no guarda nada en ningún servidor.
 
