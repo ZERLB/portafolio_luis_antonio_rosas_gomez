@@ -21,7 +21,7 @@ Una sola página que cuenta lo que hago y lo que opero, con datos del inventario
 - **Stack por capas.** Lenguajes, backend, frontend, bases de datos, servidores y virtualización, redes y seguridad, plataformas, IA, flujo de entrega y creación de videojuegos (Godot 4).
 - **Proyectos.** Savitar (mi centro de operación), SIGU, NEXUS v2, campos clínicos, reactivos, asistente virtual con voz, 100 UNISOS dijeron, Nobel, clínica universitaria, cursos de inglés, suite DTE, Mente (plugin de Claude Code), pool XCP-ng, respaldos, actualización mayor de MySQL, aulas virtuales, red y perímetro, un juego en Godot 4 y este sitio. Cada sistema se describe por lo que hace; el código institucional es privado y no se publican direcciones internas.
 - **Experiencia, certificaciones y método de trabajo.**
-- **Contacto.** Correo, teléfono y un formulario que abre tu cliente de correo con el mensaje listo; no guarda nada en ningún servidor.
+- **Contacto.** Correo y un formulario que abre tu cliente de correo con el mensaje listo; no guarda nada en ningún servidor.
 
 ## Cómo está hecho
 
