@@ -14,13 +14,12 @@
 
 ## Qué hay dentro
 
-Una sola página que cuenta lo que hago y lo que opero, con datos del inventario real de octubre de 2026:
+Una sola página que cuenta lo que hago y los sistemas en los que trabajo:
 
 - **Sobre mí y datos rápidos.** Rol, enfoque, idiomas y lo que estoy usando ahora.
-- **Infraestructura en producción.** Mapa SVG resumido de lo que opero, sin nombres ni direcciones: balanceadores HAProxy, aplicaciones Node y PHP, Moodle y Canvas, Koha y DSpace, capa de datos MySQL / MariaDB / PostgreSQL / Redis, respaldos nocturnos, NAS, pool XCP-ng y red de administración cifrada. Con cifras: 27 servidores, 18 VMs, 20+ sistemas.
-- **Stack por capas.** Lenguajes, backend, frontend, bases de datos, servidores y virtualización, redes y seguridad, plataformas, IA, flujo de entrega creación de videojuegos (Godot 4) y video programático (HyperFrames, FFmpeg).
-- **Proyectos.** Savitar (mi centro de operación), SIGU, NEXUS v2, campos clínicos, reactivos, asistente virtual con voz, 100 UNISOS dijeron, Nobel, clínica universitaria, cursos de inglés, suite DTE, Mente (plugin de Claude Code), pool XCP-ng, respaldos, actualización mayor de MySQL, aulas virtuales, red y perímetro, un juego en Godot 4 y este sitio. Cada sistema se describe por lo que hace; el código institucional es privado y no se publican direcciones internas.
-- **Experiencia, certificaciones y método de trabajo.**
+- **Stack por capas.** Lenguajes, backend, frontend, bases de datos, servidores, redes, plataformas, creación de videojuegos (Godot 4) y video programático.
+- **Proyectos.** SIGU, NEXUS v2, campos clínicos, reactivos, asistente virtual con voz, 100 UNISOS dijeron, clínica universitaria, cursos de inglés, suite DTE, un juego en Godot 4 y este sitio. Cada sistema se describe por lo que hace; el código institucional es privado.
+- **Experiencia y certificaciones.**
 - **Contacto.** Correo y un formulario que abre tu cliente de correo con el mensaje listo; no guarda nada en ningún servidor.
 
 ## Cómo está hecho
@@ -31,9 +30,7 @@ Una sola página que cuenta lo que hago y lo que opero, con datos del inventario
 | **Temas** | Claro y oscuro. Sigue la preferencia del sistema y recuerda la elección. |
 | **Idiomas** | Español por defecto e inglés con un botón (o `?lang=en`). Los textos viven en un diccionario dentro de la página. |
 | **Íconos** | Incrustados como símbolos SVG (de [Simple Icons](https://simpleicons.org/), CC0), para que la página cargue completa aunque no haya internet hacia terceros. |
-| **Mapa de infraestructura** | SVG propio, con flujo animado y respeto a `prefers-reduced-motion`. |
 | **Accesibilidad** | Enlace para saltar al contenido, foco visible, etiquetas ARIA en controles y contraste revisado en los dos temas. |
-| **Pruebas** | Antes de publicar, la página se recorre con Chrome for Testing sin ventana (escritorio, móvil, tema claro, inglés y filtros) y se revisan las capturas una por una: 0 errores de JavaScript, 0 peticiones fallidas. |
 
 ## Verlo en local
 
@@ -51,7 +48,6 @@ También basta con abrir `index.html` en el navegador.
 ## Dónde se publica
 
 - **GitHub Pages**, desde la rama `main`: <https://zerlb.github.io/portafolio_luis_antonio_rosas_gomez/>
-- Una copia en mi propio servidor, que se actualiza con `git pull` después de cada publicación.
 
 ---
 
